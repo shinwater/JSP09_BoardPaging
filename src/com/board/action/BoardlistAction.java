@@ -1,6 +1,7 @@
 package com.board.action;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -49,11 +50,29 @@ public class BoardlistAction implements Action {
 		//이 과정을 거치면 전체 페이지 수가 나온다.
 		// 전체 페이지가 나올 때 나머지가 있으면 무조건 올림~~
 		
+		
+		//ceil: 43.1234->44.0 
 		allPage = (int)Math.ceil((double)totalRecord/rowsize);
 		
 		if(endBlock >allPage) {// 마지막 블럭이 456니와서 endblock이 6인디 allpage가 5라면!?
 			endBlock = allPage;
 		}
+		
+		
+		List<BoardDTO> list = dao.getBoardList(page,rowsize);
+		
+		//페이지 처리 시 사용했던 모든 값들을 키로 저장하자.
+		request.setAttribute("page", page);					//o
+		request.setAttribute("rowsize", rowsize);
+		request.setAttribute("block", block);				//o
+		request.setAttribute("totalRecord", totalRecord);
+		request.setAttribute("allPage", allPage);			//o
+		request.setAttribute("startNo", startNo);
+		request.setAttribute("endNo", endNo);
+		request.setAttribute("startBlock", startBlock);		//o
+		request.setAttribute("endBlock", endBlock);			//o
+		request.setAttribute("List", list);					//o
+		
 	}
 
 }
