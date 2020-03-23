@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
@@ -52,6 +53,20 @@ public class MemberDAO {
 		return con;
 
 	}// openConn() end
+	
+	public void closeConn(ResultSet rs, PreparedStatement pstmt, Connection con) {
+		try {
+			if (rs != null)
+				rs.close();
+			if (pstmt != null)
+				pstmt.close();
+			if (con != null)
+				con.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	
 	//DB상의 아이디와 비밀번호를 확인하는 메서드
 	public int userCheck(String id,String pwd) {
@@ -129,4 +144,66 @@ public class MemberDAO {
 		}
 		return dto;
 	}
+	
+	
+	//회원가입시 중복아이디 체크 처리관련 메서드
+	public int checkMemberId(String id) {
+		
+		int result = 0 ; //아이디 중복 여부 변수
+		
+		try {
+			openConn();
+			sql = "select member_id from jsp_member where member_id=?";
+			
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				result=1;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			closeConn(rs, pstmt, con);
+		}
+		return result;
+	}
+	
+	//ㅇ 편번호를 검색하는 메서드~~~
+	public ArrayList searchZipCode(String dong) {
+		ArrayList zip = new ArrayList();
+		
+		try {
+			openConn();
+			sql="select * from zipcode where dong like ?";
+		
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, "%"+dong+"%");
+			rs=pstmt.executeQuery();
+			
+			while(rs.next()) {
+				String zipCode = rs.getString("zipcode");
+				String sido = rs.getString("sido");
+				String gugun = rs.getString("gugun");
+				String dong1 = rs.getString("dong");
+				String bunji = rs.getString("bunji");
+				
+				//번지를 뺀 주소를 저장.
+				String addr1 = sido+gugun+dong1;
+				//번지를 포함한 주소 저장
+				String addr2 = sido+gugun+dong1+bunji;
+				
+				//list에 레코드 형태로 저장
+				zip.add(zipCode + "," + addr1 + "," + addr2);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeConn(rs, pstmt, con);
+		}
+		return zip;
+	}//searchZipCode() end;
 }

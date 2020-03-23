@@ -78,6 +78,14 @@ public class FrontController extends HttpServlet {
 			action = new BoardSearchContAction();
 			action.execute(request, response);
 			viewPage="board_searchCont.jsp";
+		}else if(command.equals("join.do")) {
+			viewPage="member_join.jsp";
+		}else if(command.equals("zipcode_find.do")) {
+			viewPage = "zipcode.jsp";
+		}else if(command.equals("zipcode_ok.do")) {
+			action = new ZipCodeAction();
+			action.execute(request, response);
+			viewPage="zipcode.jsp";
 		}
 		
 		
