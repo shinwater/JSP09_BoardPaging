@@ -9,19 +9,6 @@
 <title>Insert title here</title>
 
 <link rel="stylesheet" href="css/bootstrap_3-3-2.css">
-<style type="text/css">
-table {
-   border: 1px solid black;
-   border-collapse: collapse; /* == cellspacing="0" */
-   width: 350px;
-}
-
-th, td {
-   border: 1px solid black;
-   border-collapse: collapse; /* == cellspacing="0" */
-   text-align: center;
-}
-</style>
 
 </head>
 <body>
@@ -30,21 +17,21 @@ th, td {
 		<div class="clear"></div>
 		
 		<hr width="50%" color="red">
-		<h3>MVC-2 모델 BOARD1 테이블 전체 리스트</h3>
+		<h3>MVC-2 모델 BOARD1 테이블 검색 리스트</h3>
 		<hr width="50%" color="red">
 		
-		<table>
+		<table border="0" cellspacint="0" width="400">
 			<tr>
 				<th>글번호</th><th>글제목</th>
 				<th>조회수</th><th>등록일</th>
 			</tr>
 			
-			<c:set var="list" value="${List }"></c:set>
+			<c:set var="list" value="${searchList }"></c:set>
 			<c:if test="${!empty list }">
 				<c:forEach items="${list }" var="dto">
 					<tr>
 						<td>${dto.getBoard_no() }</td>
-						<td><a href="board_cont.do?no=${dto.getBoard_no()}&page=${page }">${dto.getBoard_title() }</a></td>
+						<td><a href="board_searchCont.do?no=${dto.getBoard_no()}&page=${page }&field=${find_field}&name=${find_name}">${dto.getBoard_title() }</a></td>
 						<td>${dto.getBoard_hit() }</td>
 						<td>${dto.getBoard_regdate().substring(0,10) }</td>
 					</tr>
@@ -71,49 +58,32 @@ th, td {
 			<ul class="pagination"><!-- 순서없는 목록 -->
 				<c:if test="${page >block }">
 					<li class="paginate_button previous">
-						<a href="board_list.do?page=1">◀◀</a></li>
-					<li><a href="board_list.do?page=${startBlock-1 }">◀</a></li>
+						<a href="board_search.do?page=1&find_field=${find_field }&find_name=${find_name}">◀◀</a></li>
+					<li><a href="board_search.do?page=${startBlock-1 }&find_field=${find_field }&find_name=${find_name}">◀</a></li>
 				</c:if>
 				
 				<!-- 기억해애  -->
 				<c:forEach begin="${startBlock }" end="${endBlock }" var="i">
 					<c:if test="${i == page }"><!--현재페이지일떄  -->
 					<li class="active"><!-- 클릭시 색깔바뀜ㅇ -->
-					<a href="board_list.do?page=${i }">${i }</a></li>
+					<a href="board_search.do?page=${i }&find_field=${find_field }&find_name=${find_name}">${i }</a></li>
 					</c:if>
 					<c:if test="${i != page}">
-					<li><a href="board_list.do?page=${i }">${i }</a></li>
+					<li><a href="board_search.do?page=${i }&find_field=${find_field }&find_name=${find_name}">${i }</a></li>
 					</c:if>
 				</c:forEach>
 				
 				<c:if test="${endBlock < allPage }">
-					<li><a href="board_list.do?page=${endBlock+1 }">▶</a></li>
+					<li><a href="board_search.do?page=${endBlock+1 }&find_field=${find_field }&find_name=${find_name}">▶</a></li>
 					<li class="paginate_button next">
-						<a href="board_list.do?page=${allPage }">▶▶</a></li>
+						<a href="board_search.do?page=${allPage }&find_field=${find_field }&find_name=${find_name}">▶▶</a></li>
 					
 				</c:if>
+				
 			</ul>
-		
 		</div>
-		<br/>
-		<hr width="50%" color="red">
-		<br/>
-		
-		<form method="post" action="<%=request.getContextPath() %>/board_search.do">
-			
-			<select name="find_field">
-				<option value="title">글제목</option>
-				<option value="cont">글내용</option>
-				<option value="title_cont">제목+내용</option>
-				<option value="writer">작성자</option>
-			
-			</select>
-			
-			<input type="text" name="find_name"/>
-			<input type="submit" value="검색"/>
-		</form>
-		
-		
+		<div align="center">
+			<input type="button" value="전체 목록" onclick="location.href='<%=request.getContextPath()%>/board_list.do'"></div>
 	</div>
 </body>
 </html>

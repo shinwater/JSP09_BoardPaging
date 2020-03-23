@@ -9,10 +9,22 @@
 </head>
 <body>
 	
-	<div>
+	<div align="center">
 	<form action="board_del_ok.do">
 	<input type="hidden" name="no" value="${no }">
 	<input type="hidden" name="page" value="${page }">
+	
+	<table>
+	<tr>
+	<th>비밀번호확인</th>
+	<td><input type="text" name="check"></td>
+	</tr>
+	<tr>
+	<td colspan="2">
+	<input type="submit" value="확;인"></td>
+	</tr>
+	
+	</table>
 	
 	
 	</form>
